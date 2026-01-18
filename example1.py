@@ -1,7 +1,6 @@
 from thread_viewer.thread_viewer import ThreadViewer
 
 with ThreadViewer(12, 50) as thread_viewer:
-    thread_viewer.reset()
     thread_viewer.run('thread_5')
     thread_viewer.run('thread_3')
     thread_viewer.run('thread_0')
