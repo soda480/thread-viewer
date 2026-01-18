@@ -1,14 +1,27 @@
+import time
+import random
+import threading
+from concurrent.futures import ThreadPoolExecutor
 from thread_viewer.thread_viewer import ThreadViewer
 
-with ThreadViewer(12, 50) as thread_viewer:
-    thread_viewer.run('thread_5')
-    thread_viewer.run('thread_3')
-    thread_viewer.run('thread_0')
-    thread_viewer.run('thread_1')
-    thread_viewer.run('thread_6')
-    thread_viewer.run('thread_7')
-    thread_viewer.run('thread_11')
-    thread_viewer.run('thread_10')
-    thread_viewer.run('thread_9')
-    thread_viewer.done('thread_6')
-    thread_viewer.done('thread_11')
+def process_item(item, viewer):
+    thread_name = threading.current_thread().name  # e.g. "thread_3"
+    viewer.run(thread_name)
+    try:
+        seconds = random.uniform(1, 2)
+        time.sleep(seconds)
+        return seconds
+    finally:
+        viewer.done(thread_name)
+
+def main():
+    items = 75
+    num_threads = 12
+
+    with ThreadPoolExecutor(max_workers=num_threads, thread_name_prefix='thread') as executor:
+        with ThreadViewer(thread_count=num_threads, task_count=items, thread_prefix='thread_') as viewer:
+            futures = [executor.submit(process_item, item, viewer) for item in range(items)]
+            return [future.result() for future in futures]
+
+if __name__ == "__main__":
+    main()
