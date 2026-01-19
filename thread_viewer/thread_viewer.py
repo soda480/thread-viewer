@@ -1,5 +1,5 @@
 import time
-import random
+import secrets
 from colorama import Fore, Style
 from list2term import Lines
 
@@ -37,7 +37,8 @@ class ThreadRowView:
         self._active = active_char * width
         self._empty = inactive_char * width
         self._cells = [self._empty] * count
-        self._x_axis = Style.BRIGHT + ' '.join(str(i).zfill(width) for i in range(count)) + Style.RESET_ALL
+        self._x_axis = Style.BRIGHT + \
+            ' '.join(str(i).zfill(width) for i in range(count)) + Style.RESET_ALL
 
         # Track the previously used color for each cell
         self._colors = [None] * count
@@ -51,7 +52,7 @@ class ThreadRowView:
 
         prev = self._colors[n]
         choices = self._COLORS if prev is None else [c for c in self._COLORS if c != prev]
-        color = random.choice(choices)
+        color = secrets.choice(choices)
 
         self._colors[n] = color
         # Render active cell with color and reset styles afterward

@@ -11,11 +11,8 @@ It’s built on top of [list2term](https://pypi.org/project/list2term/) and desi
 ## Features
 
 * Real-time terminal visualization
-* Works with real thread names (no fake IDs)
 * Colorized activity to make fast thread reuse visible
 * Minimal API: `run()` / `done()`
-* No background render loop
-* No sleeps required in workers
 * Safe to use in long-running jobs
 
 ## Installation
