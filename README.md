@@ -61,11 +61,9 @@ def main():
 if __name__ == "__main__":
     main()
 ```
-
-![example4c](https://github.com/soda480/thread-viewer/blob/main/docs/images/example1.gif?raw=true)
-
 </details>
 
+![example4c](https://github.com/soda480/thread-viewer/blob/main/docs/images/example1.gif?raw=true)
 
 * Each cell represents a thread
 * Active threads are shown as blocks
