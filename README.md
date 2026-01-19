@@ -7,14 +7,15 @@ A lightweight terminal UI for visualizing thread pool activity in real time.
 thread-viewer shows:
 * how many tasks are queued, active, and completed
 * which threads are currently active
-* live activity even under high throughput (via color changes)
+* when threads finish and start tasks (via color changes)
+* live activity even under high throughput
 
-It’s built on top of [list2term](https://pypi.org/project/list2term/) and designed to work naturally with `ThreadPoolExecutor` and real thread names.
+It’s built on top of [list2term](https://pypi.org/project/list2term/) and designed to work naturally with `ThreadPoolExecutor`.
 
 ## Features
 
 * Real-time terminal visualization
-* Colorized activity to make fast thread reuse visible
+* Colorized activity to make thread reuse visible
 * Minimal API: `run()` / `done()`
 * Safe to use in long-running jobs
 
@@ -68,7 +69,7 @@ if __name__ == "__main__":
 * Each cell represents a thread
 * Active threads are shown as blocks
 * Every activation changes color so you can see reuse
-* Counts updater live
+* Counts are updated live
 
 ## API Overview
 
@@ -100,9 +101,9 @@ This ensures proper terminal setup and cleanup.
 
 ## How It Works
 
-* Uses list2term.Lines for efficient terminal updates
+* Uses `list2term.Lines` for efficient terminal updates
 * Each thread maps to a fixed cell index
-* On every activation:
+* On every activation - when thread finishes task or starts a new task:
     * the cell is updated
     * a new foreground color is chosen (different from the previous one)
 * This makes activity visible even when threads never truly go idle
