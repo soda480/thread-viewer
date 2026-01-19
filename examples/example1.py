@@ -8,18 +8,22 @@ def process_item(item, viewer):
     thread_name = threading.current_thread().name  # e.g. "thread_3"
     viewer.run(thread_name)
     try:
-        seconds = random.uniform(1, 2)
+        seconds = random.uniform(.1, 1)
         time.sleep(seconds)
         return seconds
     finally:
         viewer.done(thread_name)
 
 def main():
-    items = 75
-    num_threads = 12
+    items = 120
+    num_threads = 24
 
     with ThreadPoolExecutor(max_workers=num_threads, thread_name_prefix='thread') as executor:
-        with ThreadViewer(thread_count=num_threads, task_count=items, thread_prefix='thread_') as viewer:
+        with ThreadViewer(
+            thread_count=num_threads,
+            task_count=items,
+            thread_prefix='thread_'
+        ) as viewer:
             futures = [executor.submit(process_item, item, viewer) for item in range(items)]
             return [future.result() for future in futures]
 
