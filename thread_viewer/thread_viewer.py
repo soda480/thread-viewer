@@ -153,20 +153,27 @@ class ThreadViewer(Lines):
     def run(self, thread_name):
         """ Mark a task as started on the given thread.
         """
-        self._decrement('Queued')
-        self._increment('Active')
         n = self._get_thread_number(thread_name)
-        self._thread_row_view.activate(n)
-        self[self._thread_row] = self._thread_row_view.render()
+        if n is not None:
+            self._decrement('Queued')
+            self._increment('Active')
+            self._thread_row_view.activate(n)
+            self[self._thread_row] = self._thread_row_view.render()
 
     def done(self, thread_name):
         """ Mark a task as completed on the given thread.
         """
-        self._decrement('Active')
-        self._increment('Closed')
         n = self._get_thread_number(thread_name)
-        self._thread_row_view.deactivate(n, seconds=0)
-        self[self._thread_row] = self._thread_row_view.render()
+        if n is not None:
+            self._decrement('Active')
+            self._increment('Closed')
+            self._thread_row_view.deactivate(n, seconds=0)
+            self[self._thread_row] = self._thread_row_view.render()
+        else:
+            # done event with no thread name occurs from a skip-dependency event
+            # a task is skipped due to a dependency failure
+            self._decrement('Queued')
+            self._increment('Closed')
 
     def _decrement(self, name):
         """ Decrement the numeric value of a counter row.
@@ -190,5 +197,5 @@ class ThreadViewer(Lines):
         """ Extract the thread index from a thread name.
         """
         if not thread_name.startswith(self._thread_prefix):
-            raise ValueError(f'Unexpected thread name: {thread_name!r}')
+            return
         return int(thread_name[len(self._thread_prefix):])
