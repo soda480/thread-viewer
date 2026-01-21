@@ -1,5 +1,5 @@
 [![ci](https://github.com/soda480/thread-viewer/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/soda480/thread-viewer/actions/workflows/ci.yml)
-[![PyPI version](https://badge.fury.io/py/thread-viewer.svg)](https://badge.fury.io/py/thread-viewer)
+[![PyPI version](https://badge.fury.io/py/thread-viewer.svg?icon=si%3Apython)](https://badge.fury.io/py/thread-viewer)
 
 # `thread-viewer`
 A lightweight terminal UI for visualizing thread pool activity in real time.
