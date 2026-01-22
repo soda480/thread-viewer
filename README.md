@@ -5,8 +5,8 @@
 A lightweight terminal UI for visualizing thread pool activity in real time.
 
 thread-viewer shows:
-* how many tasks are queued, active, and completed
-* which threads are currently active
+* how many tasks are `queued`, `active`, and `closed` (i.e. completed)
+* which threads are currently active (represented as blocks)
 * when threads finish and start tasks (via color changes)
 * live activity even under high throughput
 
@@ -30,14 +30,15 @@ pip install thread-viewer
 <details><summary>Code</summary>
 
 ```Python
+import sys
 import time
 import random
 import threading
 from concurrent.futures import ThreadPoolExecutor
-from thread_viewer.thread_viewer import ThreadViewer
+from thread_viewer import ThreadViewer
 
-def process_item(item, viewer):
-    thread_name = threading.current_thread().name  # e.g. "thread_3"
+def process_task(item, viewer):
+    thread_name = threading.current_thread().name
     viewer.run(thread_name)
     try:
         seconds = random.uniform(.1, 1)
@@ -47,19 +48,20 @@ def process_item(item, viewer):
         viewer.done(thread_name)
 
 def main():
-    items = 120
-    num_threads = 24
+    args = dict(a.split('=', 1) for a in sys.argv[1:])
+    workers = int(args['workers'])
+    tasks = int(args['tasks'])
 
-    with ThreadPoolExecutor(max_workers=num_threads, thread_name_prefix='thread') as executor:
+    with ThreadPoolExecutor(max_workers=workers, thread_name_prefix='thread') as executor:
         with ThreadViewer(
-            thread_count=num_threads,
-            task_count=items,
+            thread_count=workers,
+            task_count=tasks,
             thread_prefix='thread_'
         ) as viewer:
-            futures = [executor.submit(process_item, item, viewer) for item in range(items)]
+            futures = [executor.submit(process_task, task, viewer) for task in range(tasks)]
             return [future.result() for future in futures]
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
 ```
 </details>

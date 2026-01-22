@@ -144,17 +144,20 @@ class ThreadViewer(Lines):
     def reset(self):
         """ Reset counters and clear thread activity display.
         """
-        self._thread_row_view.reset()
-        self._set('Queued', value=self._task_count)
-        self._set('Active', value=0)
-        self._set('Closed', value=0)
-        self[self._thread_row] = self._thread_row_view.render()
+        with self._lock:
+            self._thread_row_view.reset()
+            self._set('Queued', value=self._task_count)
+            self._set('Active', value=0)
+            self._set('Closed', value=0)
+            self[self._thread_row] = self._thread_row_view.render()
 
     def run(self, thread_name):
         """ Mark a task as started on the given thread.
         """
         n = self._get_thread_number(thread_name)
-        if n is not None:
+        if n is None:
+            return
+        with self._lock:
             self._decrement('Queued')
             self._increment('Active')
             self._thread_row_view.activate(n)
@@ -164,16 +167,17 @@ class ThreadViewer(Lines):
         """ Mark a task as completed on the given thread.
         """
         n = self._get_thread_number(thread_name)
-        if n is not None:
-            self._decrement('Active')
-            self._increment('Closed')
-            self._thread_row_view.deactivate(n, seconds=0)
-            self[self._thread_row] = self._thread_row_view.render()
-        else:
-            # done event with no thread name occurs from a skip-dependency event
-            # a task is skipped due to a dependency failure
-            self._decrement('Queued')
-            self._increment('Closed')
+        with self._lock:
+            if n is not None:
+                self._decrement('Active')
+                self._increment('Closed')
+                self._thread_row_view.deactivate(n, seconds=0)
+                self[self._thread_row] = self._thread_row_view.render()
+            else:
+                # done event with no thread name occurs from a skip-dependency event
+                # a task is skipped due to a dependency failure
+                self._decrement('Queued')
+                self._increment('Closed')
 
     def _decrement(self, name):
         """ Decrement the numeric value of a counter row.
