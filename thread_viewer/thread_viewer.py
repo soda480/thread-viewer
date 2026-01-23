@@ -21,7 +21,7 @@ class ThreadRowView:
         Fore.CYAN,
     ]
 
-    def __init__(self, count=0, width=1, active_char='█', inactive_char=' '):
+    def __init__(self, count=0, width=1, active_char='█', inactive_char='░'):
         """ Initialize the thread row view.
 
         :param count: Number of thread cells to render.
@@ -84,6 +84,18 @@ class ThreadRowView:
         """
         if n < 0 or n >= len(self._cells):
             raise ValueError(f'cell index out of range: {n}')
+
+    def cell(self, n):
+        """ Return the rendered string for cell `n`.
+        """
+        self._check(n)
+        return self._cells[n]
+
+    def cell_color(self, n):
+        """ Return the color string for cell `n`, or None if inactive.
+        """
+        self._check(n)
+        return self._colors[n]
 
     @property
     def x_axis(self):
@@ -152,7 +164,7 @@ class ThreadViewer(Lines):
             self[self._thread_row] = self._thread_row_view.render()
 
     def run(self, thread_name):
-        """ Mark a task as started on the given thread.
+        """ Mark a thread as started
         """
         n = self._get_thread_number(thread_name)
         if n is None:
@@ -164,7 +176,7 @@ class ThreadViewer(Lines):
             self[self._thread_row] = self._thread_row_view.render()
 
     def done(self, thread_name):
-        """ Mark a task as completed on the given thread.
+        """ Mark a thread as completed
         """
         n = self._get_thread_number(thread_name)
         with self._lock:
@@ -203,3 +215,8 @@ class ThreadViewer(Lines):
         if not thread_name.startswith(self._thread_prefix):
             return
         return int(thread_name[len(self._thread_prefix):])
+
+    def get(self, label):
+        """ Return the string value of a row by label.
+        """
+        return self[self._idx[label]]
