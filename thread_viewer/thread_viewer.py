@@ -21,7 +21,7 @@ class ThreadRowView:
         Fore.CYAN,
     ]
 
-    def __init__(self, count=0, width=1, active_char='█', inactive_char='░'):
+    def __init__(self, count=0, width=1, active_char='█', inactive_char='⬚'):  # ░
         """ Initialize the thread row view.
 
         :param count: Number of thread cells to render.
