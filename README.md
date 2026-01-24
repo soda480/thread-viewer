@@ -1,4 +1,5 @@
 [![ci](https://github.com/soda480/thread-viewer/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/soda480/thread-viewer/actions/workflows/ci.yml)
+![Coverage](https://raw.githubusercontent.com/soda480/thread-viewer/main/badges/coverage.svg)
 [![PyPI version](https://badge.fury.io/py/thread-viewer.svg?icon=si%3Apython)](https://badge.fury.io/py/thread-viewer)
 
 # `thread-viewer`
