@@ -24,7 +24,8 @@ def main():
         with ThreadViewer(
             thread_count=workers,
             task_count=tasks,
-            thread_prefix='thread_'
+            thread_prefix='thread_',
+            inactive_char='░',
         ) as viewer:
             futures = [executor.submit(process_task, task, viewer) for task in range(tasks)]
             return [future.result() for future in futures]
