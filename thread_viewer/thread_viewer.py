@@ -110,7 +110,13 @@ class ThreadViewer(Lines):
         representation of thread activity using a ThreadRowView.
     """
 
-    def __init__(self, thread_count=0, task_count=0, thread_prefix='thread_'):
+    def __init__(
+            self,
+            thread_count=0,
+            task_count=0,
+            thread_prefix='thread_',
+            active_char='█',
+            inactive_char='⬚'):
         """ Initialize the thread viewer.
 
         :param thread_count: Number of worker threads.
@@ -134,6 +140,8 @@ class ThreadViewer(Lines):
         self._thread_row_view = ThreadRowView(
             count=thread_count,
             width=self._thread_width,
+            active_char=active_char,
+            inactive_char=inactive_char,
         )
         self._thread_row = self._idx['Thread']
 

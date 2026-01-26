@@ -57,13 +57,15 @@ def main():
         with ThreadViewer(
             thread_count=workers,
             task_count=tasks,
-            thread_prefix='thread_'
+            thread_prefix='thread_',
+            inactive_char='░',
         ) as viewer:
             futures = [executor.submit(process_task, task, viewer) for task in range(tasks)]
             return [future.result() for future in futures]
 
 if __name__ == '__main__':
     main()
+
 ```
 </details>
 
@@ -81,6 +83,8 @@ class ThreadViewer(
     thread_count,               # number of worker threads
     task_count,                 # total number of tasks expected
     thread_prefix='thread_'     # prefix used to extract thread index
+    active_char='█',            # char for active thread
+    inactive_char='⬚'          # char for inactive thread
 )
 ```
 
